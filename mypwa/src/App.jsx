@@ -1,35 +1,36 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { getAllPokemonList } from './api/pokemon';
+import { getAllPokemonList } from './api/pokemondata';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [pokemonData,setPokemonData] = useState([]);
+  
+  useEffect(() => {
+    async function fetchData(){
+      const data = await getAllPokemonList();
+      setPokemonData(data?.results);
+    }
+    fetchData();
+  },[])
   return (
-    <>
+    <div style={{marginTop:'40px',justifyContent:'space-around',display:'flex',flexWrap:'wrap', width:'90%', margin:'auto'}}>
+      
+      {pokemonData?.map((poke,i) => {
+        return (
+          <div style={{width: '400px',height:'330px', border:'2px solid #000000', margin:'30px 10px'}}>
+              <div style={{padding:'5px 10px'}}>
+                <p style={{fontWeight:'bold',textTransform:'capitalize'}}> {poke.name}</p>
+              </div>
+              <img style={{height: '300px', width:'300px'}} alt="pokemon" src={`https://img.pokemondb.net/artwork/large/${poke.name}.jpg`}/>
+          </div>
+        )
+      })}
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
